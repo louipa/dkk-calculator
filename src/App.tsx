@@ -58,8 +58,8 @@ function App() {
       <div className="input-section">
         <input
           type="number"
-          inputMode="numeric"
-          pattern="[0-9]*"
+          inputMode="decimal"
+          step="any"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Montant en DKK"
@@ -80,13 +80,14 @@ function App() {
             Effacer tout
           </button>
         </div>
-        {inputValue && !isNaN(parseFloat(inputValue)) && (
-          <div className="preview">
-            {parseFloat(inputValue).toFixed(2)} DKK ={" "}
-            {(parseFloat(inputValue) * DKK_TO_EUR).toFixed(2)} EUR
-          </div>
-        )}
       </div>
+
+      {inputValue && !isNaN(parseFloat(inputValue)) && (
+        <div className="preview">
+          {parseFloat(inputValue).toFixed(2)} DKK ={" "}
+          {(parseFloat(inputValue) * DKK_TO_EUR).toFixed(2)} EUR
+        </div>
+      )}
 
       <div className="divider"></div>
 

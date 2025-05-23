@@ -195,7 +195,6 @@ button:hover:not(:disabled) {
 }
 
 .preview {
-  width: 100%;
   text-align: center;
   margin-top: 8px;
   padding: 8px;
