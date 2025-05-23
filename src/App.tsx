@@ -80,6 +80,12 @@ function App() {
             Effacer tout
           </button>
         </div>
+        {inputValue && !isNaN(parseFloat(inputValue)) && (
+          <div className="preview">
+            {parseFloat(inputValue).toFixed(2)} DKK ={" "}
+            {(parseFloat(inputValue) * DKK_TO_EUR).toFixed(2)} EUR
+          </div>
+        )}
       </div>
 
       <div className="divider"></div>
