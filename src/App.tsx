@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./App.css";
 
 const DKK_TO_EUR = 0.134;
@@ -18,6 +18,21 @@ function App() {
   });
   const [inputValue, setInputValue] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const previewAmount = useMemo(() => {
+    if (
+      !inputValue ||
+      isNaN(parseFloat(inputValue)) ||
+      parseFloat(inputValue) <= 0
+    ) {
+      return null;
+    }
+    const dkkValue = parseFloat(inputValue);
+    return {
+      dkk: dkkValue,
+      eur: dkkValue * DKK_TO_EUR,
+    };
+  }, [inputValue]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(amounts));
@@ -60,6 +75,7 @@ function App() {
           type="number"
           inputMode="decimal"
           step="any"
+          min="0"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Montant en DKK"
@@ -82,10 +98,10 @@ function App() {
         </div>
       </div>
 
-      {inputValue && !isNaN(parseFloat(inputValue)) && (
+      {previewAmount && (
         <div className="preview">
-          {parseFloat(inputValue).toFixed(2)} DKK ={" "}
-          {(parseFloat(inputValue) * DKK_TO_EUR).toFixed(2)} EUR
+          {previewAmount.dkk.toFixed(2)} DKK = {previewAmount.eur.toFixed(2)}{" "}
+          EUR
         </div>
       )}
 
