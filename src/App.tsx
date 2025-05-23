@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 const DKK_TO_EUR = 0.134;
@@ -9,9 +9,19 @@ interface Amount {
   eur: number;
 }
 
+const STORAGE_KEY = "dkk-calculator";
+
 function App() {
-  const [amounts, setAmounts] = useState<Amount[]>([]);
+  const [amounts, setAmounts] = useState<Amount[]>(() => {
+    const savedAmounts = localStorage.getItem(STORAGE_KEY);
+    return savedAmounts ? JSON.parse(savedAmounts) : [];
+  });
   const [inputValue, setInputValue] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(amounts));
+  }, [amounts]);
 
   const addAmount = () => {
     const dkkValue = parseFloat(inputValue);
@@ -23,6 +33,10 @@ function App() {
       };
       setAmounts([...amounts, newAmount]);
       setInputValue("");
+      setShowTooltip(false);
+    } else {
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 2000);
     }
   };
 
@@ -50,7 +64,12 @@ function App() {
           onKeyDown={(e) => e.key === "Enter" && addAmount()}
         />
         <div className="button-group">
-          <button onClick={addAmount}>Ajouter</button>
+          <button onClick={addAmount} className={showTooltip ? "tooltip" : ""}>
+            Ajouter
+            {showTooltip && (
+              <span className="tooltip-text">Veuillez entrer un montant</span>
+            )}
+          </button>
           <button
             className="clear-all"
             onClick={clearAll}
@@ -61,6 +80,8 @@ function App() {
         </div>
       </div>
 
+      <div className="divider"></div>
+
       <div className="amounts-list">
         {amounts.map((amount) => (
           <div key={amount.id} className="amount-item">
@@ -70,6 +91,8 @@ function App() {
           </div>
         ))}
       </div>
+
+      <div className="divider"></div>
 
       <div className="total">
         <h2>Total</h2>
