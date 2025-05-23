@@ -58,6 +58,8 @@ function App() {
       <div className="input-section">
         <input
           type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Montant en DKK"
