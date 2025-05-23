@@ -21,7 +21,7 @@ body {
 .app {
   max-width: 90vw;
   width: 95%;
-  padding: 15px;
+  padding: 10px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
   background-color: var(--color-white);
@@ -32,15 +32,15 @@ body {
 h1 {
   text-align: center;
   color: var(--color-text);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 1.5rem;
 }
 
 .input-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 15px;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .input-section > input {
@@ -93,17 +93,17 @@ button:hover:not(:disabled) {
 }
 
 .amounts-list {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .amount-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
+  padding: 6px;
   background-color: var(--color-item-bg);
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-size: 0.875rem;
   color: var(--color-text);
 }
@@ -114,8 +114,13 @@ button:hover:not(:disabled) {
 
 .amount-item button {
   background-color: var(--color-danger);
-  padding: 4px 8px;
-  font-size: 1rem;
+  padding: 6px 12px;
+  font-size: 1.25rem;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .amount-item button:hover {
@@ -124,19 +129,19 @@ button:hover:not(:disabled) {
 
 .total {
   background-color: var(--color-total-bg);
-  padding: 15px;
+  padding: 10px;
   border-radius: 8px;
   text-align: center;
 }
 
 .total h2 {
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   color: var(--color-text);
   font-size: 1.2rem;
 }
 
 .total p {
-  margin: 4px 0;
+  margin: 2px 0;
   font-size: 1rem;
   color: var(--color-text-light);
 }
