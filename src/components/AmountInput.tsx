@@ -70,12 +70,12 @@ export const AmountInput: React.FC<AmountInputProps> = ({
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Montant en DKK"
             onKeyDown={(e) => e.key === "Enter" && handleAddAmount()}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
           {inputValue && (
             <button
               onClick={() => setInputValue("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 focus:outline-none"
               aria-label="Effacer"
             >
               <svg
