@@ -20,8 +20,8 @@ body {
 
 .app {
   max-width: 90vw;
-  width: 95%;
   padding: 10px;
+  margin: 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
   background-color: var(--color-white);
@@ -202,4 +202,83 @@ button:hover:not(:disabled) {
   border-radius: 8px;
   color: var(--color-text-light);
   font-size: 0.875rem;
+}
+
+.scroll-top-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.scroll-top-button:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.scanner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.scanner-content {
+  width: 90%;
+  max-width: 500px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scanner-content video {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.scanner-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.scanner-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.scanner-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.scanner-buttons button:last-child {
+  background-color: #dc3545;
 }

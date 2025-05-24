@@ -1,128 +1,94 @@
-import { useState, useEffect, useMemo } from "react";
-import "./App.css";
+import { useState, useEffect } from "react";
+import { Scanner } from "./components/Scanner";
+import { AmountList } from "./components/AmountList";
+import { Total } from "./components/Total";
+import { AmountInput } from "./components/AmountInput";
+import { useAmountStore } from "./store/amountStore";
 
-const DKK_TO_EUR = 0.134;
-
-interface Amount {
-  id: number;
-  dkk: number;
-  eur: number;
-}
-
-const STORAGE_KEY = "dkk-calculator";
+const SCROLL_TOP_THRESHOLD = 200;
 
 function App() {
-  const [amounts, setAmounts] = useState<Amount[]>(() => {
-    const savedAmounts = localStorage.getItem(STORAGE_KEY);
-    return savedAmounts ? JSON.parse(savedAmounts) : [];
-  });
-  const [inputValue, setInputValue] = useState("");
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [scannedValue, setScannedValue] = useState("");
 
-  const previewAmount = useMemo(() => {
-    if (
-      !inputValue ||
-      isNaN(parseFloat(inputValue)) ||
-      parseFloat(inputValue) <= 0
-    ) {
-      return null;
-    }
-    const dkkValue = parseFloat(inputValue);
-    return {
-      dkk: dkkValue,
-      eur: dkkValue * DKK_TO_EUR,
-    };
-  }, [inputValue]);
+  const { amounts, addAmount, removeAmount, clearAll, getTotal } =
+    useAmountStore();
+  const { totalDKK, totalEUR } = getTotal();
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(amounts));
-  }, [amounts]);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > SCROLL_TOP_THRESHOLD);
+    };
 
-  const addAmount = () => {
-    const dkkValue = parseFloat(inputValue);
-    if (!isNaN(dkkValue) && dkkValue > 0) {
-      const newAmount: Amount = {
-        id: Date.now(),
-        dkk: dkkValue,
-        eur: dkkValue * DKK_TO_EUR,
-      };
-      setAmounts([...amounts, newAmount]);
-      setInputValue("");
-      setShowTooltip(false);
-    } else {
-      setShowTooltip(true);
-      setTimeout(() => setShowTooltip(false), 2000);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleAddAmount = (value: string) => {
+    try {
+      addAmount(parseFloat(value));
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const removeAmount = (id: number) => {
-    setAmounts(amounts.filter((amount) => amount.id !== id));
+  const handleRemoveAmount = (id: number) => {
+    removeAmount(id);
   };
 
-  const clearAll = () => {
-    setAmounts([]);
+  const handleClearAll = () => {
+    clearAll();
   };
 
-  const totalDKK = amounts.reduce((sum, amount) => sum + amount.dkk, 0);
-  const totalEUR = amounts.reduce((sum, amount) => sum + amount.eur, 0);
+  const handleScanComplete = (value: string) => {
+    setScannedValue(value);
+  };
 
   return (
-    <div className="app">
-      <h1>Calculatrice de Courses</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">
+          Calculatrice de Courses
+        </h1>
 
-      <div className="input-section">
-        <input
-          type="number"
-          inputMode="decimal"
-          step="any"
-          min="0"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Montant en DKK"
-          onKeyDown={(e) => e.key === "Enter" && addAmount()}
+        <AmountInput
+          onAddAmount={handleAddAmount}
+          onShowScanner={() => setShowScanner(true)}
+          onClearAll={handleClearAll}
+          hasAmounts={amounts.length > 0}
+          scannedValue={scannedValue}
+          onScannedValueChange={setScannedValue}
         />
-        <div className="button-group">
-          <button onClick={addAmount} className={showTooltip ? "tooltip" : ""}>
-            Ajouter
-            {showTooltip && (
-              <span className="tooltip-text">Veuillez entrer un montant</span>
-            )}
-          </button>
+
+        {showScanner && (
+          <Scanner
+            onScanComplete={handleScanComplete}
+            onClose={() => setShowScanner(false)}
+          />
+        )}
+
+        <div className="my-6 border-t border-gray-200"></div>
+
+        <AmountList amounts={amounts} onRemoveAmount={handleRemoveAmount} />
+
+        <div className="my-6 border-t border-gray-200"></div>
+
+        <Total totalDKK={totalDKK} totalEUR={totalEUR} />
+
+        {showScrollTop && (
           <button
-            className="clear-all"
-            onClick={clearAll}
-            disabled={amounts.length === 0}
+            className="fixed bottom-8 right-8 bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-800 transition-colors"
+            onClick={scrollToTop}
+            aria-label="Retour en haut"
           >
-            Effacer tout
+            ↑
           </button>
-        </div>
-      </div>
-
-      {previewAmount && (
-        <div className="preview">
-          {previewAmount.dkk.toFixed(2)} DKK = {previewAmount.eur.toFixed(2)}{" "}
-          EUR
-        </div>
-      )}
-
-      <div className="divider"></div>
-
-      <div className="amounts-list">
-        {amounts.map((amount) => (
-          <div key={amount.id} className="amount-item">
-            <span>{amount.dkk.toFixed(2)} DKK</span>
-            <span>= {amount.eur.toFixed(2)} EUR</span>
-            <button onClick={() => removeAmount(amount.id)}>×</button>
-          </div>
-        ))}
-      </div>
-
-      <div className="divider"></div>
-
-      <div className="total">
-        <h2>Total</h2>
-        <p>{totalDKK.toFixed(2)} DKK</p>
-        <p>= {totalEUR.toFixed(2)} EUR</p>
+        )}
       </div>
     </div>
   );

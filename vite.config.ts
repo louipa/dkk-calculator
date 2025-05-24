@@ -5,4 +5,8 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   base: "/dkk-calculator/",
+  server: {
+    host: true,
+    allowedHosts: true,
+  },
 });
